@@ -1,8 +1,28 @@
-## Things you need to do:
+# Gaming Asset Marketplace
 
-- Project.sol file - Rename this file and add the solidity code inside it.
-- deploy.js file - Add the deploy.js (javascript) code inside it.
-- .env.example - Add the Private Key of your MetaMask Wallet's account.
-- Readme.md file - Add the Readme content inside this file.
-- package.json file – Replace the `"name"` property value from `"Project-Title"` to your actual project title. <br/>
-*Example:* `"name": "crowdfunding-smartcontract"`
+A decentralized marketplace for in-game assets (NFTs) — buy, sell, trade, and auction gaming items, skins, and collectibles. Built with smart contracts, a deployable backend, and an optional frontend wallet integration to enable secure, transparent marketplace operations.
+
+---
+
+## Key Features
+- Mint and list game assets as NFTs (ERC-721 / ERC-1155 compatible)
+- Fixed-price sales and on-chain auctions
+- Royalty support for creators (ERC-2981)
+- Secure marketplace escrow and safe transfers
+- Metadata stored on IPFS (images, stats, rarity)
+- Frontend wallet integration (MetaMask / WalletConnect)
+- Polygon (Mumbai) support for low-cost testing and Polygon Mainnet ready
+
+---
+
+## Tech Stack
+- Solidity (smart contracts)
+- Hardhat (development & testing)
+- Ethers.js (frontend/backend interaction)
+- IPFS / nft.storage or Pinata (metadata hosting)
+- Node.js / Express (optional backend for indexing & off-chain services)
+- React (example frontend)
+
+---
+
+## Project Structure
