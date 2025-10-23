@@ -5,7 +5,7 @@ A decentralized marketplace for in-game assets (NFTs) — buy, sell, trade, and 
 ---
 
 ## Key Features
-- Mint and list game assets as NFTs (ERC-721 / ERC-1155 compatible)
+- Mint and list game asset as NFTs (ERC-721 / ERC-1155 compatible)
 - Fixed-price sales and on-chain auctions
 - Royalty support for creators (ERC-2981)
 - Secure marketplace escrow and safe transfers
