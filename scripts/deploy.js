@@ -34,7 +34,7 @@ async function main() {
     const rc = await tx.wait();
     const evt = rc.logs.find(l => l.fragment && l.fragment.name === "EventCreated");
     const eventId = evt ? evt.args[0] : undefined;
-    console.log(`Event created with id: ${eventId?.toString?.() ?? "unknown"}`);
+    console.log(`Asset created with id: ${eventId?.toString?.() ?? "unknown"}`);
   }
 
   // Optional: Etherscan/Polygonscan verification
