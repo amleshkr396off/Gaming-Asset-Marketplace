@@ -1,5 +1,5 @@
 {
-  "name": "Project-Title",
+  "name": "Gaming-Asset-Marketplace",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -24,4 +24,5 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3"
   }
+
 } 
