@@ -26,3 +26,9 @@ A decentralized marketplace for in-game assets (NFTs) — buy, sell, trade, and 
 ---
 
 ## Project Structure
+/contracts
+/scritps
+/tests
+.env.example
+
+
