@@ -6,44 +6,87 @@ async function main() {
   const network = hre.network.name;
   const [deployer] = await hre.ethers.getSigners();
 
-  const NAME = process.env.TICKETS_NAME || "Event Tickets";
-  const SYMBOL = process.env.TICKETS_SYMBOL || "ETIX";
+  const NFT_NAME = process.env.NFT_NAME || "Gaming Asset NFT";
+  const NFT_SYMBOL = process.env.NFT_SYMBOL || "GANFT";
+  const PLATFORM_FEE_BPS = process.env.PLATFORM_FEE_BPS || "250"; // 2.5%
   const CONFIRMATIONS = Number(process.env.CONFIRMATIONS || (network === "hardhat" ? 1 : 5));
 
-  console.log(`Deploying EventTicketing to ${network} with deployer ${deployer.address} ...`);
+  console.log(`Deploying Gaming Asset Marketplace to ${network} with deployer ${deployer.address} ...`);
 
-  const Factory = await hre.ethers.getContractFactory("EventTicketing");
-  const contract = await Factory.deploy(NAME, SYMBOL);
-  await contract.waitForDeployment();
-  const address = await contract.getAddress();
+  // Deploy the NFT contract first
+  console.log("Deploying GamingAssetNFT...");
+  const NFTFactory = await hre.ethers.getContractFactory("GamingAssetNFT");
+  const nftContract = await NFTFactory.deploy(NFT_NAME, NFT_SYMBOL);
+  await nftContract.waitForDeployment();
+  const nftAddress = await nftContract.getAddress();
+  
+  console.log(`GamingAssetNFT deployed at: ${nftAddress}`);
 
-  console.log(`EventTicketing deployed at: ${address}`);
+  // Deploy the Marketplace contract
+  console.log("Deploying Marketplace...");
+  const MarketplaceFactory = await hre.ethers.getContractFactory("Marketplace");
+  const marketplaceContract = await MarketplaceFactory.deploy(deployer.address, PLATFORM_FEE_BPS);
+  await marketplaceContract.waitForDeployment();
+  const marketplaceAddress = await marketplaceContract.getAddress();
+
+  console.log(`Marketplace deployed at: ${marketplaceAddress}`);
+  console.log(`Platform fee: ${PLATFORM_FEE_BPS} basis points (${PLATFORM_FEE_BPS/100}%)`);
+  console.log(`Fee recipient: ${deployer.address}`);
+  
   console.log(`Awaiting ${CONFIRMATIONS} block confirmations...`);
-  await contract.deploymentTransaction().wait(CONFIRMATIONS);
+  await nftContract.deploymentTransaction().wait(CONFIRMATIONS);
+  await marketplaceContract.deploymentTransaction().wait(CONFIRMATIONS);
 
-  // Optional: create an initial event from environment variables
-  const CREATE_EVENT = process.env.CREATE_INITIAL_EVENT === "true";
-  if (CREATE_EVENT) {
-    const EVENT_NAME = process.env.EVENT_NAME || "Sample Event";
-    const ORGANIZER = process.env.ORGANIZER || deployer.address;
-    const MAX_SUPPLY = BigInt(process.env.MAX_SUPPLY || "0"); // 0 = unlimited
-    const BASE_URI = process.env.BASE_URI || ""; // e.g., ipfs://<CID>/
+  // Optional: mint initial gaming assets
+  const MINT_INITIAL_ASSETS = process.env.MINT_INITIAL_ASSETS === "true";
+  if (MINT_INITIAL_ASSETS) {
+    console.log("Minting initial gaming assets...");
+    
+    const assets = [
+      {
+        to: deployer.address,
+        tokenURI: "https://example.com/metadata/sword1.json",
+        name: "Legendary Sword"
+      },
+      {
+        to: deployer.address,
+        tokenURI: "https://example.com/metadata/armor1.json", 
+        name: "Dragon Scale Armor"
+      },
+      {
+        to: deployer.address,
+        tokenURI: "https://example.com/metadata/potion1.json",
+        name: "Health Potion"
+      }
+    ];
 
-    console.log(`Creating event: ${EVENT_NAME}, organizer=${ORGANIZER}, maxSupply=${MAX_SUPPLY}, baseURI='${BASE_URI}'`);
-    const tx = await contract.createEvent(EVENT_NAME, ORGANIZER, MAX_SUPPLY, BASE_URI);
-    const rc = await tx.wait();
-    const evt = rc.logs.find(l => l.fragment && l.fragment.name === "EventCreated");
-    const eventId = evt ? evt.args[0] : undefined;
-    console.log(`Asset created with id: ${eventId?.toString?.() ?? "unknown"}`);
+    for (let i = 0; i < assets.length; i++) {
+      const asset = assets[i];
+      console.log(`Minting ${asset.name}...`);
+      const tx = await nftContract.mintAsset(
+        asset.to,
+        asset.tokenURI,
+        deployer.address, // royalty receiver
+        "500" // 5% royalty
+      );
+      const receipt = await tx.wait();
+      console.log(`${asset.name} minted with transaction: ${receipt.hash}`);
+    }
   }
 
   // Optional: Etherscan/Polygonscan verification
   if (process.env.ETHERSCAN_API_KEY || process.env.POLYGONSCAN_API_KEY) {
     try {
-      console.log("Verifying contract...");
+      console.log("Verifying NFT contract...");
       await hre.run("verify:verify", {
-        address,
-        constructorArguments: [NAME, SYMBOL],
+        address: nftAddress,
+        constructorArguments: [NFT_NAME, NFT_SYMBOL],
+      });
+      
+      console.log("Verifying Marketplace contract...");
+      await hre.run("verify:verify", {
+        address: marketplaceAddress,
+        constructorArguments: [deployer.address, PLATFORM_FEE_BPS],
       });
       console.log("Verification successful.");
     } catch (err) {
@@ -56,6 +99,12 @@ async function main() {
     }
   }
 
+  console.log("\n=== DEPLOYMENT SUMMARY ===");
+  console.log(`Network: ${network}`);
+  console.log(`GamingAssetNFT: ${nftAddress}`);
+  console.log(`Marketplace: ${marketplaceAddress}`);
+  console.log(`Platform Fee: ${PLATFORM_FEE_BPS/100}%`);
+  console.log(`Fee Recipient: ${deployer.address}`);
   console.log("Done.");
 }
 

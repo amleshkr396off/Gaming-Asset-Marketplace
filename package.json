@@ -1,14 +1,21 @@
 {
-  "name": "Gaming-Asset-Marketplace",
+  "name": "gaming-asset-marketplace",
   "version": "1.0.0",
-  "description": "",
+  "description": "A decentralized marketplace for trading gaming assets as NFTs with fixed-price listings and auction functionality",
   "main": "index.js",
   "scripts": {
     "test": "npx hardhat test",
+    "test:verbose": "npx hardhat test --verbose",
     "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.js --network coreTestnet"
+    "clean": "npx hardhat clean",
+    "deploy": "npx hardhat run scripts/deploy.js --network coreTestnet",
+    "deploy:localhost": "npx hardhat run scripts/deploy.js --network localhost",
+    "node": "npx hardhat node",
+    "console": "npx hardhat console --network coreTestnet",
+    "size": "npx hardhat size-contracts",
+    "coverage": "npx hardhat coverage"
   },
-  "keywords": [],
+  "keywords": ["nft", "marketplace", "gaming", "blockchain", "solidity", "defi"],
   "author": "",
   "license": "MIT",
   "devDependencies": {
