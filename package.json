@@ -10,6 +10,8 @@
     "clean": "npx hardhat clean",
     "deploy": "npx hardhat run scripts/deploy.js --network coreTestnet",
     "deploy:localhost": "npx hardhat run scripts/deploy.js --network localhost",
+    "verify": "npx hardhat run scripts/verify.js --network coreTestnet",
+    "interact": "npx hardhat run scripts/interact.js --network coreTestnet",
     "node": "npx hardhat node",
     "console": "npx hardhat console --network coreTestnet",
     "size": "npx hardhat size-contracts",
