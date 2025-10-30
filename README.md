@@ -1,6 +1,11 @@
 # Gaming Asset Marketplace
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Solidity](https://img.shields.io/badge/solidity-^0.8.13-green.svg)
+
 A decentralized marketplace for trading gaming assets as NFTs with fixed-price listings and auction functionality. Built with Solidity smart contracts and Hardhat for development and testing.
+
+> **Note**: This marketplace enables secure trading of gaming assets with built-in royalty support and platform fees.
 
 ---
 
